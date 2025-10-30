@@ -1,5 +1,5 @@
 # Erlang and Elixir — Laboratory Solutions 2025
-Solutions for the AGH Erlang and Elixir course at AGH University of Science and Technology (academic year 2024–2025). The course focuses on functional and concurrent programming, process management and OTP.
+Solutions for the Erlang and Elixir course at AGH University of Science and Technology (academic year 2024–2025). The course focuses on functional and concurrent programming, process management and OTP.
 
 ## Laboratories
 
