@@ -1,0 +1,12 @@
+{application,pollution_server,
+             [{description,"An OTP application"},
+              {vsn,"0.1.0"},
+              {registered,[]},
+              {mod,{pollution_server_app,[]}},
+              {applications,[kernel,stdlib]},
+              {env,[]},
+              {modules,[pollution,pollution_gen_server,pollution_server_app,
+                        pollution_server_sup,
+                        pollution_value_collector_gen_statem]},
+              {licenses,["Apache-2.0"]},
+              {links,[]}]}.

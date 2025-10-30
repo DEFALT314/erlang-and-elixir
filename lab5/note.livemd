@@ -1,0 +1,85 @@
+# Untitled notebook
+
+## Section
+
+```elixir
+x = File.read!("/home/defalt/Pobrane/AirlyData-ALL-50k.csv") |> String.split("\n", trim: true)
+IO.puts length(x)
+```
+
+```elixir
+# 2024-01-23T15:00:00.000Z;PM10;11.74;8077;Polska, Kraków, Mikołajska;50.062006,19.940984
+defmodule Parser do
+  def parser(data) do
+    IO.puts(data)
+    [datetime, pollutionType, pollutionLevel, id, stationName, locaton] = String.split(data, ";")
+    date = datetime|> String.slice(0..9) |> String.split("-") |> Enum.map(&String.to_integer/1) 
+      |> List.to_tuple
+    time = datetime |> String.slice(11..18) |> String.split(":") |> Enum.map(&String.to_integer/1) 
+      |>List.to_tuple
+    location = locaton |> String.split(",") |> Enum.map(&String.to_float/1) |> List.to_tuple
+    %{:datetime => { date, time},
+      :location => location, 
+      :stationId => String.to_integer(id),
+      :stationName => stationName,
+:pollutionType => pollutionType,
+:pollutionLevel => String.to_float(pollutionLevel)}
+  end
+  
+  def identifyStations(data) do
+    Enum.uniq_by(data, & (&1.stationId))
+  end
+end
+
+parsed_data = Enum.map(x, &Parser.parser/1)
+
+```
+
+```elixir
+uniq_s = Parser.identifyStations(parsed_data)
+length(uniq_s)
+```
+
+```elixir
+Code.append_path("/home/defalt/Studia/Erlang/lab4/pollution_server/_build/default/lib/pollution_server/ebin")
+Application.start(:pollution_server)
+
+```
+
+```elixir
+fn () -> for x <- uniq_s do 
+  :pollution_gen_server.add_station("#{x.stationId} #{x.stationName}", x.location)
+end
+  end|> :timer.tc |> elem(0)
+```
+
+```elixir
+fn () ->
+  Enum.each(parsed_data, fn x ->
+    :pollution_gen_server.add_value("#{x.stationId} #{x.stationName}", x.datetime, x.pollutionType, x.pollutionLevel)
+    end)
+  end |> :timer.tc |> elem(0)
+```
+
+```elixir
+:pollution_gen_server.get_station_min("9910 Polska, Kraków, Studencka", "PM10")
+```
+
+```elixir
+fn () -> :pollution_gen_server.get_station_min("9910 Polska, Kraków, Studencka", "PM10")
+   end |> :timer.tc |> elem(0) 
+```
+
+```elixir
+:pollution_gen_server.get_daily_mean("PM25",{2024, 2, 10} )
+```
+
+```elixir
+fn () -> :pollution_gen_server.get_daily_mean("PM25",{2024, 2, 10} )
+  end |> :timer.tc |> elem(0) 
+```
+
+```elixir
+Application.stop(:pollution_server)
+
+```

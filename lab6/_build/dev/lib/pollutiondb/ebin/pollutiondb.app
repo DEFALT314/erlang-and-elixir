@@ -1,0 +1,13 @@
+{application,pollutiondb,
+             [{modules,['Elixir.Pollutiondb','Elixir.Pollutiondb.Application',
+                        'Elixir.Pollutiondb.Parser',
+                        'Elixir.Pollutiondb.Reading',
+                        'Elixir.Pollutiondb.Repo',
+                        'Elixir.Pollutiondb.Station']},
+              {optional_applications,[]},
+              {applications,[kernel,stdlib,elixir,logger,eex,wx,observer,
+                             runtime_tools,ecto_sql,ecto_sqlite3]},
+              {description,"pollutiondb"},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {mod,{'Elixir.Pollutiondb.Application',[]}}]}.

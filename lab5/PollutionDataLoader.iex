@@ -1,0 +1,24 @@
+defmodule Parser do
+  def load_data(data) do
+    File.read!("/home/defalt/Pobrane/AirlyData-ALL-50k.csv") |> String.split("\n", trim: true)
+  end
+  def parser(data) do
+    IO.puts(data)
+    [datetime, pollutionType, pollutionLevel, id, stationName, locaton] = String.split(data, ";")
+    date = datetime|> String.slice(0..9) |> String.split("-") |> Enum.map(&String.to_integer/1)
+      |> List.to_tuple
+    time = datetime |> String.slice(11..18) |> String.split(":") |> Enum.map(&String.to_integer/1)
+      |>List.to_tuple
+    location = locaton |> String.split(",") |> Enum.map(&String.to_float/1) |> List.to_tuple
+    %{:datetime => { date, time},
+      :location => location,
+      :stationId => String.to_integer(id),
+      :stationName => stationName,
+:pollutionType => pollutionType,
+:pollutionLevel => String.to_float(pollutionLevel)}
+  end
+
+  def identifyStations(data) do
+    Enum.uniq_by(data, & (&1.stationId))
+  end
+end
